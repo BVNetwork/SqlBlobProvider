@@ -5,7 +5,7 @@ VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EPiCode.SqlBlobProvider", "EPiCode.SqlBlobProvider\EPiCode.SqlBlobProvider.csproj", "{2645003A-1DAB-44C7-9FF3-C61A725D367F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EPiCode.BlobConverter", "BlobConverter\EPiCode.BlobConverter.csproj", "{12E7B831-B4A8-402C-931B-61D23EE4F717}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EPiCode.BlobConverter", "EPiCode.BlobConverter\EPiCode.BlobConverter.csproj", "{12E7B831-B4A8-402C-931B-61D23EE4F717}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
