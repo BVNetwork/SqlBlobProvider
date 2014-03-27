@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>BV Network AS</authors>
+    <owners>BV Network AS</owners>
+    <projectUrl>https://www.coderesort.com/p/epicode/wiki/WikiStart</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Store blobs in DB using DDS</description>
+    <tags>EPiServer</tags>
+    <dependencies>
+      <dependency id="EPiServer.Framework" version="7.5" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="EPiServerFramework.config.transform" target="content" />
+  </files>
+</package>

@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<episerver.framework>
+  <blob defaultProvider="sqlBlobProvider">
+    <providers>
+      <add name="sqlBlobProvider" type="EPiCode.SqlBlobProvider.SqlBlobProvider, EPiCode.SqlBlobProvider" />
+    </providers>
+  </blob>
+</episerver.framework>
