@@ -1,0 +1,17 @@
+= Blob Provider for SQL Server =
+Store all blobs in the database instead of disk.
+
+Easy deployment in load balanced environments, perfect for development teams, avoids committing your blobs into source control too.
+
+This is - conceptually - the same as the Database File System for previous CMS versions. See [/p/epicode/wiki/DatabaseFileSystem] for more information.
+
+Also works for EPiServer Commerce as the assets are stored as regular media.
+
+== Installation ==
+TBD
+
+== Usage ==
+TBD
+
+== Support ==
+This is an unsupported module. Use at your own risk.
