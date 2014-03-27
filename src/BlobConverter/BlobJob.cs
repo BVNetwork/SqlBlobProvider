@@ -1,12 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using EPiServer.BaseLibrary.Scheduling;
 using EPiServer.Framework.Blobs;
 using EPiServer.PlugIn;
-using EPiServer.BaseLibrary.Scheduling;
 using EPiServer.ServiceLocation;
 
-namespace BlobConverter
+namespace EPiCode.BlobConverter
 {
     [ScheduledPlugIn(DisplayName = "Convert File Blobs", Description = "Converts all file blobs into the currently configured blob type")]
     public class BlobJob : JobBase
