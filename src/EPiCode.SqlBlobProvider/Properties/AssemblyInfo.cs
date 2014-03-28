@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("EPiCode.SqlBlob")]
+[assembly: AssemblyTitle("EPiCode.SqlBlobProvider")]
 [assembly: AssemblyDescription("Store blobs in sql database using dynamic data store")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("BV Network AS")]
-[assembly: AssemblyProduct("EPiCode.SqlBlob")]
+[assembly: AssemblyProduct("EPiCode.SqlBlobProvider")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

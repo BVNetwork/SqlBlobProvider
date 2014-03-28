@@ -9,9 +9,9 @@
     <projectUrl>https://www.coderesort.com/p/epicode/browser/EPiCode.SqlBlobProvider</projectUrl>
     <iconUrl>http://www.coderesort.com/favicon.ico</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Convert FileBlob to your custom blob provider</description>
+    <description>Contains a scheduled job that will convert all FileBlobs into your currently configured blob provider.</description>
     <copyright>Copyright 2014</copyright>
-    <tags>EPiServer</tags>
+    <tags>EPiServer Blob</tags>
     <dependencies>
       <dependency id="EPiServer.Framework" version="7.5" />
       <dependency id="EPiServer.CMS.Core" version="7.5" />
