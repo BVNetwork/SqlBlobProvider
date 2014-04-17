@@ -40,7 +40,7 @@ namespace EPiCode.SqlBlobProvider
 
         public override void Write(Stream stream)
         {
-            var sqlBlobModel = SqlBlobModelRepository.Get(base.ID) ?? new SqlBlobModel { BlobId = base.ID };
+            var sqlBlobModel = SqlBlobModelRepository.Get(base.ID) ?? new SqlBlobModel { BlobId = ID };
             using (var streamReader = new MemoryStream())
             {
                 stream.CopyTo(streamReader);

@@ -4,9 +4,9 @@ using EPiServer.Framework.Blobs;
 namespace EPiCode.SqlBlobProvider
 {
     public class SqlBlobProvider : BlobProvider
-    {
+    { 
         public override Blob GetBlob(Uri id)
-        {
+        { 
             return new SqlBlob(id);
         }
 
@@ -14,7 +14,7 @@ namespace EPiCode.SqlBlobProvider
         {
             var blob = new SqlBlobModel
             {
-                BlobId = (Blob.NewBlobIdentifier(id, extension))
+                BlobId = (Blob.NewBlobIdentifier(id, extension))      
             };
             SqlBlobModelRepository.Save(blob);
             return GetBlob(blob.BlobId);

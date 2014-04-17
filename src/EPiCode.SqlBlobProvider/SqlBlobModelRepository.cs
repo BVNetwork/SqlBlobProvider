@@ -8,10 +8,10 @@ namespace EPiCode.SqlBlobProvider
     {
         public static SqlBlobModel Get(Uri id)
         {
-            var comment = (from c in SqlBlobStore.Items<SqlBlobModel>()
-                           where c.BlobId == id
-                           select c).FirstOrDefault();
-            return comment;
+            var blobModel = (from b in SqlBlobStore.Items<SqlBlobModel>()
+                             where b.BlobId == id
+                             select b).FirstOrDefault();
+            return blobModel;
         }
 
         public static DynamicDataStore SqlBlobStore
@@ -23,18 +23,31 @@ namespace EPiCode.SqlBlobProvider
         }
 
         public static void Save(SqlBlobModel blob)
-        {
+        { 
             SqlBlobStore.Save(blob, blob.Id);
         }
 
         public static void Delete(Uri id)
         {
-            var comment = (from c in SqlBlobStore.Items<SqlBlobModel>()
-                           where c.BlobId == id
-                           select c).FirstOrDefault();
+            if (id.Segments.Length == 2)
+            {
+                var blobs = (from b in SqlBlobStore.Items<SqlBlobModel>()
+                             where ((string)(object)b.BlobId).Contains(id.Segments[1])
+                            select b).ToList();
+                foreach (var blob in blobs)
+                {
+                    SqlBlobStore.Delete(blob.Id);
+                }
+            }
+            else
+            {
+                var blobModel = (from b in SqlBlobStore.Items<SqlBlobModel>()
+                                 where b.BlobId == id
+                                 select b).FirstOrDefault();
 
-            if (comment != null)
-                SqlBlobStore.Delete(comment.BlobId);
+                if (blobModel != null)
+                    SqlBlobStore.Delete(blobModel.Id);
+            }
         }
     }
 }
