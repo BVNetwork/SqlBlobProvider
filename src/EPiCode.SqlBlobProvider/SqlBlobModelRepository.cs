@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using EPiServer.Data.Dynamic;
+using EPiServer.Framework.Blobs;
 
 namespace EPiCode.SqlBlobProvider
 {
@@ -8,9 +9,7 @@ namespace EPiCode.SqlBlobProvider
     {
         public static SqlBlobModel Get(Uri id)
         {
-            var blobModel = (from b in SqlBlobStore.Items<SqlBlobModel>()
-                             where b.BlobId == id
-                             select b).FirstOrDefault();
+            var blobModel = SqlBlobStore.Find<SqlBlobModel>("BlobId", id.ToString()).FirstOrDefault();
             return blobModel;
         }
 
