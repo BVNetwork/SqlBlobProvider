@@ -11,6 +11,7 @@ namespace EPiCode.SqlBlobProvider
         {
             Id = Guid.NewGuid();
         }
+        [EPiServerDataIndex]
         public Uri BlobId { get; set; }
         public Identity Id { get; set; }
         public byte[] Blob { get; set; }
