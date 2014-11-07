@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Linq;
 using EPiServer.Data.Dynamic;
-using EPiServer.Framework.Blobs;
-
 namespace EPiCode.SqlBlobProvider
 {
     public class SqlBlobModelRepository

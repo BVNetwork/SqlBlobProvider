@@ -1,50 +1,62 @@
-﻿using System;
+﻿using EPiServer.Framework.Blobs;
+using System;
 using System.IO;
-using EPiServer.Framework.Blobs;
 
 namespace EPiCode.SqlBlobProvider
 {
     public class SqlBlob : Blob
     {
-        public SqlBlob(Uri id)
+        public string FilePath { get; internal set; }
+        public bool LoadFromDisk { get; internal set; }
+        public SqlBlob(Uri id, string filePath,bool loadFromDisk)
             : base(id)
         {
-
+            FilePath = filePath;
+            LoadFromDisk = loadFromDisk;
         }
 
         public override Stream OpenRead()
         {
-            return new MemoryStream(SqlBlobModelRepository.Get(base.ID).Blob);
+            if (!LoadFromDisk)
+                return new MemoryStream(SqlBlobModelRepository.Get(ID).Blob);
+            return FileHelper.GetOrCreateFileBlob(FilePath, ID);
         }
 
         public override Stream OpenWrite()
         {
             string tempFileName = Path.GetTempFileName();
             var trackableStream = new TrackableStream(new FileStream(tempFileName, FileMode.Create, FileAccess.ReadWrite, FileShare.None));
-            trackableStream.Closing += ((source, e) =>
+            trackableStream.Closing += delegate(object source, EventArgs e)
             {
-                Stream stream = ((TrackableStream)source).InnerStream;
-                stream.Seek(0, SeekOrigin.Begin);
-                Write(stream);
-            });
-            trackableStream.Closed += ((source, e) =>
+                var innerStream = ((TrackableStream)source).InnerStream;
+                innerStream.Seek(0L, SeekOrigin.Begin);
+                Write(innerStream);
+            };
+            trackableStream.Closed += delegate
             {
-                var file = new FileInfo(tempFileName);
-                if (file.Exists)
+                var fileInfo = new FileInfo(tempFileName);
+                if (fileInfo.Exists)
                 {
-                    file.Delete();
+                    fileInfo.Delete();
                 }
-            });
+            };
             return trackableStream;
         }
-
         public override void Write(Stream stream)
         {
-            var sqlBlobModel = SqlBlobModelRepository.Get(base.ID) ?? new SqlBlobModel { BlobId = ID };
-            using (var streamReader = new MemoryStream())
+            SqlBlobModel blobModel;
+            if ((blobModel = SqlBlobModelRepository.Get(ID)) == null)
             {
-                stream.CopyTo(streamReader);
-                sqlBlobModel.Blob = streamReader.ToArray();
+                blobModel = new SqlBlobModel
+                {
+                    BlobId = ID
+                };
+            }
+            var sqlBlobModel = blobModel;
+            using (var memoryStream = new MemoryStream())
+            {
+                stream.CopyTo(memoryStream);
+                sqlBlobModel.Blob = memoryStream.ToArray();
             }
             SqlBlobModelRepository.Save(sqlBlobModel);
         }
