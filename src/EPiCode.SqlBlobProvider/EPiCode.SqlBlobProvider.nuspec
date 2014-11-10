@@ -16,6 +16,6 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="EPiServerFramework.config.transform" target="content" />
+    <file src="Web.config.transform" target="content" />
   </files>
 </package>

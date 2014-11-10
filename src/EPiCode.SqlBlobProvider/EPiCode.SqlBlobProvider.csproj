@@ -42,7 +42,7 @@
     <None Include="EPiCode.SqlBlobProvider.nuspec">
       <SubType>Designer</SubType>
     </None>
-    <None Include="EPiServerFramework.config.transform" />
+    <None Include="Web.config.transform" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
@@ -58,7 +58,7 @@
     </Reference>
     <Reference Include="EPiServer, Version=7.5.394.2, Culture=neutral, PublicKeyToken=8fe83dea738b45b7, processorArchitecture=MSIL">
       <Private>True</Private>
-      <HintPath>..\..\..\..\EPiServer\nbim\wwwroot\packages\EPiServer.CMS.Core.7.5.394.2\lib\net40\EPiServer.dll</HintPath>
+      <HintPath>..\packages\EPiServer.CMS.Core.7.5.394.2\lib\net40\EPiServer.dll</HintPath>
     </Reference>
     <Reference Include="EPiServer.ApplicationModules, Version=7.5.394.2, Culture=neutral, PublicKeyToken=8fe83dea738b45b7, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -66,11 +66,11 @@
     </Reference>
     <Reference Include="EPiServer.BaseLibrary, Version=7.5.394.2, Culture=neutral, PublicKeyToken=8fe83dea738b45b7, processorArchitecture=MSIL">
       <Private>True</Private>
-      <HintPath>..\..\..\..\EPiServer\nbim\wwwroot\packages\EPiServer.CMS.Core.7.5.394.2\lib\net40\EPiServer.BaseLibrary.dll</HintPath>
+      <HintPath>..\packages\EPiServer.CMS.Core.7.5.394.2\lib\net40\EPiServer.BaseLibrary.dll</HintPath>
     </Reference>
     <Reference Include="EPiServer.Configuration, Version=7.5.394.2, Culture=neutral, PublicKeyToken=8fe83dea738b45b7, processorArchitecture=MSIL">
       <Private>True</Private>
-      <HintPath>..\..\..\..\EPiServer\nbim\wwwroot\packages\EPiServer.CMS.Core.7.5.394.2\lib\net40\EPiServer.Configuration.dll</HintPath>
+      <HintPath>..\packages\EPiServer.CMS.Core.7.5.394.2\lib\net40\EPiServer.Configuration.dll</HintPath>
     </Reference>
     <Reference Include="EPiServer.Data, Version=7.5.394.2, Culture=neutral, PublicKeyToken=8fe83dea738b45b7, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -82,7 +82,7 @@
     </Reference>
     <Reference Include="EPiServer.Enterprise, Version=7.5.394.2, Culture=neutral, PublicKeyToken=8fe83dea738b45b7, processorArchitecture=MSIL">
       <Private>True</Private>
-      <HintPath>..\..\..\..\EPiServer\nbim\wwwroot\packages\EPiServer.CMS.Core.7.5.394.2\lib\net40\EPiServer.Enterprise.dll</HintPath>
+      <HintPath>..\packages\EPiServer.CMS.Core.7.5.394.2\lib\net40\EPiServer.Enterprise.dll</HintPath>
     </Reference>
     <Reference Include="EPiServer.Events, Version=7.5.394.2, Culture=neutral, PublicKeyToken=8fe83dea738b45b7, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -94,11 +94,11 @@
     </Reference>
     <Reference Include="EPiServer.ImageLibrary, Version=7.5.394.2, Culture=neutral, PublicKeyToken=8fe83dea738b45b7, processorArchitecture=MSIL">
       <Private>True</Private>
-      <HintPath>..\..\..\..\EPiServer\nbim\wwwroot\packages\EPiServer.CMS.Core.7.5.394.2\lib\net40\EPiServer.ImageLibrary.dll</HintPath>
+      <HintPath>..\packages\EPiServer.CMS.Core.7.5.394.2\lib\net40\EPiServer.ImageLibrary.dll</HintPath>
     </Reference>
     <Reference Include="EPiServer.Implementation, Version=7.5.394.2, Culture=neutral, PublicKeyToken=8fe83dea738b45b7, processorArchitecture=MSIL">
       <Private>True</Private>
-      <HintPath>..\..\..\..\EPiServer\nbim\wwwroot\packages\EPiServer.CMS.Core.7.5.394.2\lib\net40\EPiServer.Implementation.dll</HintPath>
+      <HintPath>..\packages\EPiServer.CMS.Core.7.5.394.2\lib\net40\EPiServer.Implementation.dll</HintPath>
     </Reference>
     <Reference Include="EPiServer.Licensing, Version=7.5.394.2, Culture=neutral, PublicKeyToken=8fe83dea738b45b7, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -106,7 +106,7 @@
     </Reference>
     <Reference Include="EPiServer.LinkAnalyzer, Version=7.5.394.2, Culture=neutral, PublicKeyToken=8fe83dea738b45b7, processorArchitecture=MSIL">
       <Private>True</Private>
-      <HintPath>..\..\..\..\EPiServer\nbim\wwwroot\packages\EPiServer.CMS.Core.7.5.394.2\lib\net40\EPiServer.LinkAnalyzer.dll</HintPath>
+      <HintPath>..\packages\EPiServer.CMS.Core.7.5.394.2\lib\net40\EPiServer.LinkAnalyzer.dll</HintPath>
     </Reference>
     <Reference Include="EPiServer.Shell, Version=7.5.394.2, Culture=neutral, PublicKeyToken=8fe83dea738b45b7, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -114,15 +114,15 @@
     </Reference>
     <Reference Include="EPiServer.Web.WebControls, Version=7.5.394.2, Culture=neutral, PublicKeyToken=8fe83dea738b45b7, processorArchitecture=MSIL">
       <Private>True</Private>
-      <HintPath>..\..\..\..\EPiServer\nbim\wwwroot\packages\EPiServer.CMS.Core.7.5.394.2\lib\net40\EPiServer.Web.WebControls.dll</HintPath>
+      <HintPath>..\packages\EPiServer.CMS.Core.7.5.394.2\lib\net40\EPiServer.Web.WebControls.dll</HintPath>
     </Reference>
     <Reference Include="EPiServer.WorkflowFoundation, Version=7.5.394.2, Culture=neutral, PublicKeyToken=8fe83dea738b45b7, processorArchitecture=MSIL">
       <Private>True</Private>
-      <HintPath>..\..\..\..\EPiServer\nbim\wwwroot\packages\EPiServer.CMS.Core.7.5.394.2\lib\net40\EPiServer.WorkflowFoundation.dll</HintPath>
+      <HintPath>..\packages\EPiServer.CMS.Core.7.5.394.2\lib\net40\EPiServer.WorkflowFoundation.dll</HintPath>
     </Reference>
     <Reference Include="EPiServer.XForms, Version=7.5.394.2, Culture=neutral, PublicKeyToken=8fe83dea738b45b7, processorArchitecture=MSIL">
       <Private>True</Private>
-      <HintPath>..\..\..\..\EPiServer\nbim\wwwroot\packages\EPiServer.CMS.Core.7.5.394.2\lib\net40\EPiServer.XForms.dll</HintPath>
+      <HintPath>..\packages\EPiServer.CMS.Core.7.5.394.2\lib\net40\EPiServer.XForms.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
       <Private>True</Private>

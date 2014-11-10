@@ -15,7 +15,7 @@ namespace EPiCode.SqlBlobProvider
         public string Path { get; internal set; }
         public bool LoadFromDisk { get; internal set; }
         private const string PathKey = "path";
-        private const string LoadFromDiskKey = "loadfromdisk";
+        private const string LoadFromDiskKey = "loadFromDisk";
 
         public SqlBlobProvider()
             : this("[appDataPath]\\sqlProviderBlobs",false)
