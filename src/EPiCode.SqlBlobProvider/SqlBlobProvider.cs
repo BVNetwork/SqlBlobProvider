@@ -1,4 +1,5 @@
-﻿using EPiServer;
+﻿using System.Runtime.Remoting.Messaging;
+using EPiServer;
 using EPiServer.Framework;
 using EPiServer.Web;
 using EPiServer.Core;
@@ -16,9 +17,10 @@ namespace EPiCode.SqlBlobProvider
         public bool LoadFromDisk { get; internal set; }
         private const string PathKey = "path";
         private const string LoadFromDiskKey = "loadFromDisk";
+        protected const string StandardFilePath = "[appDataPath]\\sqlProviderBlobs";
 
         public SqlBlobProvider()
-            : this("[appDataPath]\\sqlProviderBlobs",false)
+            : this(StandardFilePath, false)
         {
 
         }
@@ -35,7 +37,8 @@ namespace EPiCode.SqlBlobProvider
             if (config.Get(LoadFromDiskKey) != null)
                 LoadFromDisk = bool.Parse((config.Get(LoadFromDiskKey)));           
             var events = ServiceLocator.Current.GetInstance<IContentEvents>();
-            events.DeletingContent += DeleteSqlBlobProviderFiles;
+            if(LoadFromDisk)
+                events.DeletingContent += DeleteSqlBlobProviderFiles;
             base.Initialize(name, config);
         }
 

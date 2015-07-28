@@ -4,9 +4,9 @@ using log4net;
 
 namespace EPiCode.SqlBlobProvider
 {
-    public class FileHelper
+    class FileHelper
     {
-        protected static ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static ILog _log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         internal static void Delete(Uri id, string path)
         {
             try
@@ -30,7 +30,7 @@ namespace EPiCode.SqlBlobProvider
             }
             catch (Exception ex)
             {
-                Log.Error("An error occured while deleting SqlBlobProvider files", ex);
+                _log.Error("An error occured while deleting SqlBlobProvider files", ex);
             }
         }
 

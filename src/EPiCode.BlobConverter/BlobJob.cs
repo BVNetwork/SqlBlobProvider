@@ -8,7 +8,7 @@ using EPiServer.ServiceLocation;
 
 namespace EPiCode.BlobConverter
 {
-    [ScheduledPlugIn(DisplayName = "Convert File Blobs", Description = "Converts all file blobs into the currently configured blob type")]
+    [ScheduledPlugIn(DisplayName = "Convert File Blobs", Description = "Converts all file blobs into the currently configured blob type", SortIndex = 10000)]
     public class BlobJob : JobBase
     {
         protected Injected<BlobFactory> BlobFactory { get; set; }
