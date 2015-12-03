@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>BV Network AS</authors>
+    <owners>BV Network AS</owners>
+    <projectUrl>https://www.coderesort.com/p/epicode/browser/EPiCode.SqlBlobProvider</projectUrl>
+    <iconUrl>http://www.coderesort.com/favicon.ico</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Contains a scheduled job that will convert all FileBlobs into your currently configured blob provider.</description>
+    <copyright>Copyright 2014</copyright>
+    <tags>EPiServer Blob</tags>
+    <dependencies>
+      <dependency id="EPiServer.Framework" version="7.5" />
+      <dependency id="EPiServer.CMS.Core" version="7.5" />
+      <dependency id="EPiServer.CMS.UI" version="7.5" />
+    </dependencies>
+  </metadata>
+</package>

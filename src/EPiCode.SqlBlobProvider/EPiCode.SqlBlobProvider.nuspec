@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>EPiCode.SqlBlobProvider</id>
+    <version>$version$</version>
+    <title>EPiCode.SqlBlobProvider</title>
+    <authors>Per Magne Skuseth</authors>
+    <owners>BV Network AS</owners>
+    <projectUrl>https://www.coderesort.com/p/epicode/wiki/WikiStart</projectUrl>
+    <iconUrl>http://www.coderesort.com/favicon.ico</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A blob provider which stores all blobs in database</description>
+    <tags>EPiServer Blob</tags>
+    <dependencies>
+      <dependency id="EPiServer.Framework" version="7.5" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="Web.config.transform" target="content" />
+    <file src="bin\$configuration$\EPiCode.SqlBlobProvider.dll" target="lib\net45\" />
+  </files>
+</package>
