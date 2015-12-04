@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using log4net;
+using EPiServer.Logging.Compatibility;
 
 namespace EPiCode.SqlBlobProvider
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using EPiServer.Data.Dynamic;
-using log4net;
+using EPiServer.Logging.Compatibility;
 
 namespace EPiCode.SqlBlobProvider
 {
