@@ -33,6 +33,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="NonSeekableMemoryStream.cs" />
     <Compile Include="SqlBlob.cs" />
     <Compile Include="SqlBlobExportJob.cs" />
     <Compile Include="SqlBlobModel.cs" />

@@ -18,7 +18,7 @@ namespace EPiCode.SqlBlobProvider
         public override Stream OpenRead()
         {
             if (!LoadFromDisk)
-                return new MemoryStream(SqlBlobModelRepository.Get(ID).Blob);
+                return new NonSeekableMemoryStream(SqlBlobModelRepository.Get(ID).Blob);
             return FileHelper.GetOrCreateFileBlob(FilePath, ID);
         }
 
