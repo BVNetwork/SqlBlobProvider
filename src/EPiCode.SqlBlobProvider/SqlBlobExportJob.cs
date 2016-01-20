@@ -1,12 +1,11 @@
 ﻿using System.IO;
-using EPiServer.BaseLibrary.Scheduling;
 using EPiServer.Framework.Blobs;
 using EPiServer.PlugIn;
 
 namespace EPiCode.SqlBlobProvider
 {
     [ScheduledPlugIn(DisplayName = "Export SQL Blobs", Description = "Exports all SQL Blobs to disk", SortIndex = 10001)]
-    public class ExportSqlBlobsJob : JobBase
+    public class ExportSqlBlobsJob : EPiServer.Scheduler.ScheduledJobBase
     {
         private bool _stopSignaled;
         public ExportSqlBlobsJob()

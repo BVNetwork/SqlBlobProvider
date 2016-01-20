@@ -180,7 +180,7 @@
     <NuGetExe>$(SolutionDir)\.nuget\NuGet.exe</NuGetExe>
     <NuspecFile>$(SolutionDir)\EPiCode.BlobConverter\EPiCode.BlobConverter.nuspec</NuspecFile>
   </PropertyGroup>
-    <Target Name="CreateNugetPackage" AfterTargets="Build">
+    <Target Name="CreateNugetPackage" AfterTargets="Build" Condition=" '$(Configuration)' == 'Release' ">
       <PropertyGroup>
         <NugetCommand>
           "$(NuGetExe)" pack "$(NuspecFile)" -OutputDirectory "$(OutDir.TrimEnd('\\'))" -Properties Configuration=$(Configuration)

@@ -182,7 +182,14 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
-  <Import Project="$(SolutionDir)\EPiCode.SqlBlobProvider\msbuild\Main.proj" />
+    
+    <!-- This will create the Nuget Package -->
+    <PropertyGroup>
+        <SolutionDir Condition="$(SolutionDir) == ''">$(MSBuildProjectDirectory)\..\..\</SolutionDir>
+        <NuspecFile>$(ProjectDir)$(ProjectName).nuspec</NuspecFile>
+    </PropertyGroup>
+
+    <Import Project="$(ProjectDir)msbuild\Main.proj" Condition=" '$(Configuration)' == 'Release' " />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
 	     <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

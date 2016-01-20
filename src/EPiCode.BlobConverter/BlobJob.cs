@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Text;
-using EPiServer.BaseLibrary.Scheduling;
 using EPiServer.Framework.Blobs;
 using EPiServer.PlugIn;
 using EPiServer.ServiceLocation;
@@ -9,7 +8,7 @@ using EPiServer.ServiceLocation;
 namespace EPiCode.BlobConverter
 {
     [ScheduledPlugIn(DisplayName = "Convert File Blobs", Description = "Converts all file blobs into the currently configured blob type", SortIndex = 10000)]
-    public class BlobJob : JobBase
+    public class BlobJob : EPiServer.Scheduler.ScheduledJobBase
     {
         protected Injected<BlobFactory> BlobFactory { get; set; }
         private int _count;
