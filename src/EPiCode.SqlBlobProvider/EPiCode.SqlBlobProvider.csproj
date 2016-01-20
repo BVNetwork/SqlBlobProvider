@@ -35,6 +35,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="NonSeekableMemoryStream.cs" />
     <Compile Include="SqlBlob.cs" />
     <Compile Include="SqlBlobExportJob.cs" />
     <Compile Include="SqlBlobModel.cs" />
