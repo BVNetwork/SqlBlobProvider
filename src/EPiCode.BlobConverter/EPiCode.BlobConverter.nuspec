@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>EPiCode.BlobConverter</id>
-    <version>1.5.1</version>
+    <version>1.5.2</version>
     <title>EPiCode.BlobConverter</title>
     <authors>Per Magne Skuseth</authors>
     <owners>BV Network AS</owners>
@@ -16,6 +16,6 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="bin\$configuration$\EPiCode.BlobConverter.dll" target="lib\net45\" />
+    <file src="bin\$configuration$\EPiCode.BlobConverter.dll" target="lib\net461\" />
   </files>
 </package>
