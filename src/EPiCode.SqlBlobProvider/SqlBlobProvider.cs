@@ -1,5 +1,4 @@
-﻿using System.Runtime.Remoting.Messaging;
-using EPiServer;
+﻿using EPiServer;
 using EPiServer.Framework;
 using EPiServer.Web;
 using EPiServer.Core;
@@ -24,11 +23,13 @@ namespace EPiCode.SqlBlobProvider
         {
 
         }
+
         public SqlBlobProvider(string path, bool loadFromDisk)
         {
             LoadFromDisk = loadFromDisk;
             Path = VirtualPathUtilityEx.RebasePhysicalPath(path);
         }
+
         public override void Initialize(string name, NameValueCollection config)
         {
             if (config.Get(PathKey) != null)
@@ -49,8 +50,7 @@ namespace EPiCode.SqlBlobProvider
             var contentRepository = ServiceLocator.Current.GetInstance<IContentRepository>();
             foreach (var descendant in e.DeletedDescendents)
             {
-                MediaData mediaData;
-                if (contentRepository.TryGet(descendant, out mediaData))
+                if (contentRepository.TryGet(descendant, out MediaData mediaData))
                 {
                     FileHelper.Delete(Blob.GetContainerIdentifier(mediaData.ContentGuid), Path);
                 }

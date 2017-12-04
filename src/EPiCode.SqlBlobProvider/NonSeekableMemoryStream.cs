@@ -13,9 +13,6 @@ namespace EPiCode.SqlBlobProvider
         /// By always returning false, we effectively turn off
         /// Episerver's async download support
         /// </summary>
-        public override bool CanSeek
-        {
-            get { return false; }
-        }
+        public override bool CanSeek => false;
     }
 }
