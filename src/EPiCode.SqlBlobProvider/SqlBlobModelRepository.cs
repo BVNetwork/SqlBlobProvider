@@ -7,20 +7,15 @@ namespace EPiCode.SqlBlobProvider
 {
     public class SqlBlobModelRepository
     {
-        private static ILog _log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public static SqlBlobModel Get(Uri id)
         {
             var blobModel = SqlBlobStore.Find<SqlBlobModel>("BlobId", id.ToString()).FirstOrDefault();
             return blobModel;
         }
 
-        public static DynamicDataStore SqlBlobStore
-        {
-            get  
-            {
-                return DynamicDataStoreFactory.Instance.GetStore(typeof(SqlBlobModel));
-            }
-        }
+        public static DynamicDataStore SqlBlobStore => DynamicDataStoreFactory.Instance.GetStore(typeof(SqlBlobModel));
 
         public static void Save(SqlBlobModel blob)
         { 

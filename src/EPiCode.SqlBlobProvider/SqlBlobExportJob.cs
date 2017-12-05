@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using EPiServer.Framework.Blobs;
 using EPiServer.PlugIn;
+using EPiServer.ServiceLocation;
 
 namespace EPiCode.SqlBlobProvider
 {
@@ -32,9 +33,10 @@ namespace EPiCode.SqlBlobProvider
                 }
                 if (saveDirectory == null)
                 {
-                    var provider = BlobFactory.Instance.GetProvider(item.BlobId) as SqlBlobProvider;
-                    if (provider != null)
+                    var blobProviderRegistry = ServiceLocator.Current.GetInstance<IBlobProviderRegistry>();
+                    if(blobProviderRegistry.GetProvider(item.BlobId) is SqlBlobProvider provider) {
                         saveDirectory = provider.Path;
+                    }
                 }
                 var id = item.BlobId;
                 var path = saveDirectory + id.Segments[0] + id.Segments[1] + id.Segments[2].TrimEnd('\\');
@@ -50,9 +52,9 @@ namespace EPiCode.SqlBlobProvider
                 }
                 exported++;
                 if (exported % 50 == 0)
-                    OnStatusChanged(string.Format("Exported {0} blobs.", exported));
+                    OnStatusChanged($"Exported {exported} blobs.");
             }
-            string status = string.Format("Job has completed. {0} SQL blobs has been exported to {1}.", exported, saveDirectory);
+            string status = $"Job has completed. {exported} SQL blobs has been exported to {saveDirectory}.";
             OnStatusChanged(status);
             return status;
         }
