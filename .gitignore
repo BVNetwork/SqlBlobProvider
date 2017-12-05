@@ -162,4 +162,4 @@ src/EPiCode.SqlBlobProvider/NuGet.exe
 /src/EPiCode.SqlBlobProvider/EPiCode.SqlBlobProvider.1.5.0.nupkg
 /src/EPiCode.SqlBlobProvider/app.config
 /src/EPiCode.BlobConverter/app.config
-/src/.vs/EPiCode.SqlBlobProvider/v15/sqlite3/storage.ide
+/src/.vs/

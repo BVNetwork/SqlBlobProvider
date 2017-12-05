@@ -10,7 +10,7 @@ namespace EPiCode.BlobConverter
     [ScheduledPlugIn(DisplayName = "Convert File Blobs", Description = "Converts all file blobs into the currently configured blob type", SortIndex = 10000)]
     public class BlobJob : EPiServer.Scheduler.ScheduledJobBase
     {
-        protected Injected<BlobFactory> BlobFactory { get; set; }
+        protected Injected<IBlobProviderRegistry> BlobProviderRegistry { get; set; }
         private int _count;
         private int _failCount;
         private StringBuilder _errorText = new StringBuilder();
@@ -40,7 +40,9 @@ namespace EPiCode.BlobConverter
                 var id =
                     new Uri(string.Format("{0}://{1}/{2}/{3}", Blob.BlobUriScheme, Blob.DefaultProvider, directory, path));
                 var blob = new FileBlobProvider().GetBlob(id);
-                BlobFactory.Service.GetBlob(id).Write(blob.OpenRead());
+
+                var blobProvider = BlobProviderRegistry.Service.GetProvider(id);
+                blobProvider.GetBlob(id).Write(blob.OpenRead());
                 _count++;
                 if (_count % 50 == 0)
                     OnStatusChanged(string.Format("Converted {0} blobs.", _count));

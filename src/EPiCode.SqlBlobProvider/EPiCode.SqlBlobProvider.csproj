@@ -45,7 +45,6 @@
     <Compile Include="FileHelper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="EPiCode.SqlBlobProvider.nuspec">
       <SubType>Designer</SubType>
     </None>
