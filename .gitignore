@@ -163,3 +163,4 @@ src/EPiCode.SqlBlobProvider/NuGet.exe
 /src/EPiCode.SqlBlobProvider/app.config
 /src/EPiCode.BlobConverter/app.config
 /src/.vs/
+src/.idea

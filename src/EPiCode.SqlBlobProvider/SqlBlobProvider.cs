@@ -1,81 +1,91 @@
-﻿using EPiServer;
-using EPiServer.Framework;
-using EPiServer.Web;
-using EPiServer.Core;
-using EPiServer.ServiceLocation;
-using EPiServer.Framework.Blobs;
-using System;
-using System.Collections.Specialized;
+﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
+using EPiServer;
+using EPiServer.Core;
+using EPiServer.Framework;
+using EPiServer.Framework.Blobs;
+using EPiServer.ServiceLocation;
+using EPiServer.Web;
+using Microsoft.Extensions.Configuration;
 
-namespace EPiCode.SqlBlobProvider
+namespace EPiCode.SqlBlobProvider;
+
+public class SqlBlobProvider : BlobProvider
 {
-    public class SqlBlobProvider : BlobProvider
+    public string Path { get; internal set; }
+    public bool LoadFromDisk { get; internal set; }
+    private const string PathKey = "Episerver:CMS:SqlBlobProvider:Path";
+    private const string LoadFromDiskKey = "Episerver:CMS:SqlBlobProvider:LoadFromDisk";
+    protected const string StandardFilePath = "[appDataPath]\\sqlProviderBlobs";
+
+    public SqlBlobProvider() : this(StandardFilePath, false)
     {
-        public string Path { get; internal set; }
-        public bool LoadFromDisk { get; internal set; }
-        private const string PathKey = "path";
-        private const string LoadFromDiskKey = "loadFromDisk";
-        protected const string StandardFilePath = "[appDataPath]\\sqlProviderBlobs";
+    }
 
-        public SqlBlobProvider()
-            : this(StandardFilePath, false)
+    public SqlBlobProvider(string path, bool loadFromDisk)
+    {
+        LoadFromDisk = loadFromDisk;
+        Path = VirtualPathUtilityEx.RebasePhysicalPath(path);
+    }
+
+    public override Task InitializeAsync()
+    {
+        var configuration = ServiceLocator.Current.GetInstance<IConfiguration>();
+        var path = configuration.GetValue<string>(PathKey);
+        LoadFromDisk = configuration.GetValue<bool>(LoadFromDiskKey);
+
+        if (!string.IsNullOrWhiteSpace(path))
         {
-
-        }
-
-        public SqlBlobProvider(string path, bool loadFromDisk)
-        {
-            LoadFromDisk = loadFromDisk;
             Path = VirtualPathUtilityEx.RebasePhysicalPath(path);
         }
 
-        public override void Initialize(string name, NameValueCollection config)
+        Validator.ThrowIfNullOrEmpty(PathKey, Path);
+
+        var events = ServiceLocator.Current.GetInstance<IContentEvents>();
+        if (LoadFromDisk)
         {
-            if (config.Get(PathKey) != null)
-                Path = VirtualPathUtilityEx.RebasePhysicalPath(config.Get(PathKey));
-            Validator.ThrowIfNullOrEmpty(PathKey, this.Path);
-            if (config.Get(LoadFromDiskKey) != null)
-                LoadFromDisk = bool.Parse((config.Get(LoadFromDiskKey)));           
-            var events = ServiceLocator.Current.GetInstance<IContentEvents>();
-            if(LoadFromDisk)
-                events.DeletingContent += DeleteSqlBlobProviderFiles;
-            base.Initialize(name, config);
+            events.DeletingContent += DeleteSqlBlobProviderFiles;
         }
 
-        private void DeleteSqlBlobProviderFiles(object sender, DeleteContentEventArgs e)
+        return Task.FromResult((object)null);
+    }
+
+    private void DeleteSqlBlobProviderFiles(object sender, DeleteContentEventArgs e)
+    {
+        if (e.DeletedDescendents == null || e.DeletedDescendents.Any())
         {
-            if (e.DeletedDescendents == null || e.DeletedDescendents.Any())
-                return;
-            var contentRepository = ServiceLocator.Current.GetInstance<IContentRepository>();
-            foreach (var descendant in e.DeletedDescendents)
+            return;
+        }
+
+        var contentRepository = ServiceLocator.Current.GetInstance<IContentRepository>();
+        foreach (var descendant in e.DeletedDescendents)
+        {
+            if (contentRepository.TryGet(descendant, out MediaData mediaData))
             {
-                if (contentRepository.TryGet(descendant, out MediaData mediaData))
-                {
-                    FileHelper.Delete(Blob.GetContainerIdentifier(mediaData.ContentGuid), Path);
-                }
+                FileHelper.Delete(Blob.GetContainerIdentifier(mediaData.ContentGuid), Path);
             }
         }
+    }
 
-        public override Blob GetBlob(Uri id)
-        {
-            return new SqlBlob(id, System.IO.Path.Combine(this.Path, id.AbsolutePath.Substring(1)), LoadFromDisk);
-        }
+    public override Blob GetBlob(Uri id)
+    {
+        return new SqlBlob(id, System.IO.Path.Combine(Path, id.AbsolutePath[1..]), LoadFromDisk);
+    }
 
-        public override Blob CreateBlob(Uri id, string extension)
+    public override Blob CreateBlob(Uri id, string extension)
+    {
+        var sqlBlobModel = new SqlBlobModel
         {
-            var sqlBlobModel = new SqlBlobModel
-            {
-                BlobId = Blob.NewBlobIdentifier(id, extension)
-            };
-            SqlBlobModelRepository.Save(sqlBlobModel);
-            return GetBlob(sqlBlobModel.BlobId);
-        }
+            BlobId = Blob.NewBlobIdentifier(id, extension),
+        };
+        SqlBlobModelRepository.Save(sqlBlobModel);
+        return GetBlob(sqlBlobModel.BlobId);
+    }
 
-        public override void Delete(Uri id)
-        {
-            SqlBlobModelRepository.Delete(id);
-            FileHelper.Delete(id, this.Path);
-        }
+    public override void Delete(Uri id)
+    {
+        SqlBlobModelRepository.Delete(id);
+        FileHelper.Delete(id, Path);
     }
 }

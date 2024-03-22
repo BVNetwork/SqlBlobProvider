@@ -3,63 +3,75 @@ using System.IO;
 using System.Text;
 using EPiServer.Framework.Blobs;
 using EPiServer.PlugIn;
+using EPiServer.Scheduler;
 using EPiServer.ServiceLocation;
 
-namespace EPiCode.BlobConverter
+namespace EPiCode.BlobConverter;
+
+[ScheduledPlugIn(
+    DisplayName = "Convert File Blobs",
+    Description = "Converts all file blobs into the currently configured blob type",
+    SortIndex = 10000)]
+public class BlobJob : ScheduledJobBase
 {
-    [ScheduledPlugIn(DisplayName = "Convert File Blobs", Description = "Converts all file blobs into the currently configured blob type", SortIndex = 10000)]
-    public class BlobJob : EPiServer.Scheduler.ScheduledJobBase
+    protected Injected<IBlobProviderRegistry> BlobProviderRegistry { get; set; }
+    private int _count;
+    private int _failCount;
+    private readonly StringBuilder _errorText = new ();
+
+    public BlobJob()
     {
-        protected Injected<IBlobProviderRegistry> BlobProviderRegistry { get; set; }
-        private int _count;
-        private int _failCount;
-        private StringBuilder _errorText = new StringBuilder();
-        public BlobJob()
+        IsStoppable = false;
+    }
+
+    public override string Execute()
+    {
+        OnStatusChanged($"Starting execution of {GetType()}");
+        ProcessDirectory(new FileBlobProvider().Path);
+        var status = $"Converted {_count} blobs <br\\>";
+        if (_failCount > 0)
         {
-            IsStoppable = false;
+            status = $"Converting errors:{_failCount}. Details:{_errorText}";
         }
 
-        public override string Execute()
-        {
-            OnStatusChanged(String.Format("Starting execution of {0}", this.GetType()));
-            ProcessDirectory(new FileBlobProvider().Path);
-            string status = string.Format("Converted {0} blobs <br\\>", _count);
-            if (_failCount > 0)
-            {
-                status = string.Format("Converting errors:{0}. Details:{1}", _failCount, _errorText);
-            }
-            return status;
-        }
+        return status;
+    }
 
-        public void ProcessFile(string path, string directory)
+    private void ProcessFile(string path, string directory)
+    {
+        try
         {
-            try
-            {
-                path = Path.GetFileName(path);
-                directory = Path.GetFileName(directory);
-                var id =
-                    new Uri(string.Format("{0}://{1}/{2}/{3}", Blob.BlobUriScheme, Blob.DefaultProvider, directory, path));
-                var blob = new FileBlobProvider().GetBlob(id);
+            path = Path.GetFileName(path);
+            directory = Path.GetFileName(directory);
+            var id =
+                new Uri($"{Blob.BlobUriScheme}://{Blob.DefaultProvider}/{directory}/{path}");
+            var blob = new FileBlobProvider().GetBlob(id);
 
-                var blobProvider = BlobProviderRegistry.Service.GetProvider(id);
-                blobProvider.GetBlob(id).Write(blob.OpenRead());
-                _count++;
-                if (_count % 50 == 0)
-                    OnStatusChanged(string.Format("Converted {0} blobs.", _count));
-            }
-            catch (Exception ex)
+            var blobProvider = BlobProviderRegistry.Service.GetProvider(id);
+            blobProvider.GetBlob(id).Write(blob.OpenRead());
+            _count++;
+            if (_count % 50 == 0)
             {
-                _failCount++;
-                _errorText.AppendLine(ex.ToString());
+                OnStatusChanged($"Converted {_count} blobs.");
             }
         }
-
-        public void ProcessDirectory(string targetDirectory)
+        catch (Exception ex)
         {
-            foreach (string fileName in Directory.GetFiles(targetDirectory))
-                ProcessFile(fileName, targetDirectory);
-            foreach (string subdirectory in Directory.GetDirectories(targetDirectory))
-                ProcessDirectory(subdirectory);
+            _failCount++;
+            _errorText.AppendLine(ex.ToString());
+        }
+    }
+
+    private void ProcessDirectory(string targetDirectory)
+    {
+        foreach (var fileName in Directory.GetFiles(targetDirectory))
+        {
+            ProcessFile(fileName, targetDirectory);
+        }
+
+        foreach (var subdirectory in Directory.GetDirectories(targetDirectory))
+        {
+            ProcessDirectory(subdirectory);
         }
     }
 }

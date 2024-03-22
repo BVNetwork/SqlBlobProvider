@@ -1,52 +1,69 @@
 ﻿using System;
 using System.IO;
-using EPiServer.Logging.Compatibility;
+using EPiServer.Logging;
 
-namespace EPiCode.SqlBlobProvider
+namespace EPiCode.SqlBlobProvider;
+
+class FileHelper
 {
-    class FileHelper
+    private static readonly ILogger _log = LogManager.Instance.GetLogger(nameof(FileHelper));
+
+    internal static void Delete(Uri id, string path)
     {
-        private static ILog _log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        internal static void Delete(Uri id, string path)
+        try
         {
-            try
+            if (id.Segments.Length == 2)
             {
-                if (id.Segments.Length == 2)
+                var directoryInfo = new DirectoryInfo(Path.Combine(path, id.AbsolutePath.Substring(1)));
+                if (!directoryInfo.Exists)
                 {
-                    var directoryInfo = new DirectoryInfo(Path.Combine(path, id.AbsolutePath.Substring(1)));
-                    if (!directoryInfo.Exists)
-                        return;
-                    directoryInfo.Delete(true);
+                    return;
                 }
-                else
-                {
-                    if (id.Segments.Length != 3)
-                        return;
-                    var fileInfo = new FileInfo(Path.Combine(path, id.AbsolutePath.Substring(1)));
-                    if (!fileInfo.Exists)
-                        return;
-                    fileInfo.Delete();
-                }
+
+                directoryInfo.Delete(true);
             }
-            catch (Exception ex)
+            else
             {
-                _log.Error("An error occured while deleting SqlBlobProvider files", ex);
+                if (id.Segments.Length != 3)
+                {
+                    return;
+                }
+
+                var fileInfo = new FileInfo(Path.Combine(path, id.AbsolutePath.Substring(1)));
+                if (!fileInfo.Exists)
+                {
+                    return;
+                }
+
+                fileInfo.Delete();
             }
         }
-
-        internal static Stream GetOrCreateFileBlob(string filePath, Uri id)
+        catch (Exception ex)
         {
-            if (File.Exists(filePath))
-            {
-                return new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
-            }
-            var bytes = SqlBlobModelRepository.Get(id).Blob;
-            var directoryInfo = new DirectoryInfo(Path.GetDirectoryName(filePath));
-            if (!directoryInfo.Exists)
-                directoryInfo.Create();
-
-            File.WriteAllBytes(filePath, bytes);
-            return new MemoryStream(bytes);
+            _log.Error("An error occured while deleting SqlBlobProvider files", ex);
         }
+    }
+
+    internal static Stream GetOrCreateFileBlob(string filePath, Uri id)
+    {
+        if (string.IsNullOrWhiteSpace(filePath))
+        {
+            return null;
+        }
+        
+        if (File.Exists(filePath))
+        {
+            return new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+        }
+
+        var bytes = SqlBlobModelRepository.Get(id).Blob;
+        var directoryInfo = new DirectoryInfo(Path.GetDirectoryName(filePath) ?? string.Empty);
+        if (!directoryInfo.Exists)
+        {
+            directoryInfo.Create();
+        }
+
+        File.WriteAllBytes(filePath, bytes);
+        return new MemoryStream(bytes);
     }
 }

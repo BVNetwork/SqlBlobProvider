@@ -1,50 +1,52 @@
 ﻿using System;
 using System.Linq;
 using EPiServer.Data.Dynamic;
-using EPiServer.Logging.Compatibility;
+using EPiServer.Logging;
 
-namespace EPiCode.SqlBlobProvider
+namespace EPiCode.SqlBlobProvider;
+
+public class SqlBlobModelRepository
 {
-    public class SqlBlobModelRepository
+    private static readonly ILogger _log = LogManager.Instance.GetLogger(nameof(SqlBlobModelRepository));
+
+    public static SqlBlobModel Get(Uri id)
     {
-        private static readonly ILog _log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        var blobModel = SqlBlobStore.Find<SqlBlobModel>(nameof(SqlBlobModel.BlobId), id.ToString()).FirstOrDefault();
+        return blobModel;
+    }
 
-        public static SqlBlobModel Get(Uri id)
+    public static DynamicDataStore SqlBlobStore => DynamicDataStoreFactory.Instance.GetStore(typeof(SqlBlobModel));
+
+    public static void Save(SqlBlobModel blob)
+    {
+        SqlBlobStore.Save(blob, blob.Id);
+    }
+
+    public static void Delete(Uri id)
+    {
+        if (id.Segments.Length == 2)
         {
-            var blobModel = SqlBlobStore.Find<SqlBlobModel>("BlobId", id.ToString()).FirstOrDefault();
-            return blobModel;
-        }
+            _log.Debug("Starting delete SQL Blob container " + id);
+            var blobs = SqlBlobStore.Items<SqlBlobModel>()
+                .Where(b => ((string)(object)b.BlobId).Contains(id.Segments[1]))
+                .ToList();
 
-        public static DynamicDataStore SqlBlobStore => DynamicDataStoreFactory.Instance.GetStore(typeof(SqlBlobModel));
-
-        public static void Save(SqlBlobModel blob)
-        { 
-            SqlBlobStore.Save(blob, blob.Id);
-        }
-
-        public static void Delete(Uri id)
-        {
-            if (id.Segments.Length == 2)
+            foreach (var blob in blobs)
             {
-                _log.Debug("Starting delete SQL Blob container " + id);
-                var blobs = (from b in SqlBlobStore.Items<SqlBlobModel>()
-                             where ((string)(object)b.BlobId).Contains(id.Segments[1])
-                            select b).ToList();
-                foreach (var blob in blobs)
-                {
-                    _log.Debug("Deleting SQL Blob " + blob.Id);
-                    SqlBlobStore.Delete(blob.Id);
-                }
-                _log.Debug("Finished deleting SQL Blob container " + id);
+                _log.Debug("Deleting SQL Blob " + blob.Id);
+                SqlBlobStore.Delete(blob.Id);
             }
-            else
-            {
-                var blobModel = (from b in SqlBlobStore.Items<SqlBlobModel>()
-                                 where b.BlobId == id
-                                 select b).FirstOrDefault();
 
-                if (blobModel != null)
-                    SqlBlobStore.Delete(blobModel.Id);
+            _log.Debug("Finished deleting SQL Blob container " + id);
+        }
+        else
+        {
+            var blobModel = SqlBlobStore.Items<SqlBlobModel>()
+                .FirstOrDefault(b => b.BlobId == id);
+
+            if (blobModel != null)
+            {
+                SqlBlobStore.Delete(blobModel.Id);
             }
         }
     }
