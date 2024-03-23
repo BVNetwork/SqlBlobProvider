@@ -5,6 +5,10 @@ Easy deployment in load balanced environments, perfect for development teams, av
 
 Also works for Optimizely Commerce as the assets are stored as regular media.
 
+## Requirements
+
+Optimizely CMS 12 is required. For CMS 11 support, use previous version of the library.
+
 ## Installation
 
 Install package via NuGet.
