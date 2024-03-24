@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using EPiServer.Logging;
+// ReSharper disable InconsistentNaming
+// ReSharper disable ClassNeverInstantiated.Global
 
 namespace EPiCode.SqlBlobProvider;
 

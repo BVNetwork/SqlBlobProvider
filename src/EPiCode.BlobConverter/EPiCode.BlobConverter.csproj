@@ -9,7 +9,7 @@
     </PropertyGroup>
     <PropertyGroup>
         <Title>EPiCode.BlobConverter</Title>
-        <Authors>Per Magne Skuseth</Authors>
+        <Authors>Per Magne Skuseth, Steve Celius, Karol Berezicki</Authors>
         <PackageProjectUrl>https://github.com/BVNetwork/SqlBlobProvider</PackageProjectUrl>
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <Description>Contains a scheduled job that will convert all FileBlobs into your currently configured blob provider.</Description>

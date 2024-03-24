@@ -8,6 +8,8 @@ using EPiServer.Framework.Blobs;
 using EPiServer.ServiceLocation;
 using EPiServer.Web;
 using Microsoft.Extensions.Configuration;
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedMember.Global
 
 namespace EPiCode.SqlBlobProvider;
 
@@ -77,7 +79,7 @@ public class SqlBlobProvider : BlobProvider
     {
         var sqlBlobModel = new SqlBlobModel
         {
-            BlobId = Blob.NewBlobIdentifier(id, extension),
+            BlobId = Blob.NewBlobIdentifier(id, extension)
         };
         SqlBlobModelRepository.Save(sqlBlobModel);
         return GetBlob(sqlBlobModel.BlobId);

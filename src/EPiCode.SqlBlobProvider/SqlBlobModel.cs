@@ -1,6 +1,8 @@
 ﻿using System;
 using EPiServer.Data;
 using EPiServer.Data.Dynamic;
+// ReSharper disable PropertyCanBeMadeInitOnly.Global
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 
 namespace EPiCode.SqlBlobProvider;
 

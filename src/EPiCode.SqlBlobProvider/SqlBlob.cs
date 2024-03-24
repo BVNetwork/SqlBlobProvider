@@ -1,6 +1,9 @@
 ﻿using System;
 using System.IO;
 using EPiServer.Framework.Blobs;
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable ConvertToPrimaryConstructor
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 
 namespace EPiCode.SqlBlobProvider;
 

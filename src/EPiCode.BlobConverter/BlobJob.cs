@@ -5,6 +5,8 @@ using EPiServer.Framework.Blobs;
 using EPiServer.PlugIn;
 using EPiServer.Scheduler;
 using EPiServer.ServiceLocation;
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable UnusedType.Global
 
 namespace EPiCode.BlobConverter;
 

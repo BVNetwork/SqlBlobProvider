@@ -51,7 +51,9 @@ The provider can cache files on local disk to decrease the number of database ca
 
 If you do not specify the `Path` property, it will default to `[appDataPath]\sqlProviderBlobs`
 
-**Note!** Make sure the user configured for your application pool has write access to the local folder.
+**Note!** Make sure the user configured for your application pool (IIS) has write access to the local folder.
+
+**Note!** If you host in Azure, you have limited local storage available for this type of caching (you should use the standard blob storage provider instead.)
 
 ## Migration
 If you are installing the SqlBlobProvider in an existing project that already uses the standard file blob provider, you will need to convert existing FileBlobs into SqlBlobs. This can easily be done with EPiCode.BlobConverter. This contains a scheduled job, which will convert all file blobs into the currently configured blob type. The conversion tool is not restricted to the SqlBlobProvider, so you could use it for other blob types as well.

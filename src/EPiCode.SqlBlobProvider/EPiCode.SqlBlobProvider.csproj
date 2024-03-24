@@ -9,10 +9,10 @@
     </PropertyGroup>
     <PropertyGroup>
         <Title>EPiCode.SqlBlobProvider</Title>
-        <Authors>Per Magne Skuseth</Authors>
+        <Authors>Per Magne Skuseth, Steve Celius, Karol Berezicki</Authors>
         <PackageProjectUrl>https://github.com/BVNetwork/SqlBlobProvider</PackageProjectUrl>
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-        <Description>A blob provider which stores all blobs in database</Description>
+        <Description>A blob provider which stores all blobs in the SQL database (for the CMS) instead of disk, S3 or Azure blob storage</Description>
         <PackageTags>EPiServer Blob</PackageTags>
     </PropertyGroup>
     <ItemGroup>

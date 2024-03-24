@@ -3,6 +3,7 @@ using EPiServer.Framework.Blobs;
 using EPiServer.PlugIn;
 using EPiServer.Scheduler;
 using EPiServer.ServiceLocation;
+// ReSharper disable UnusedType.Global
 
 namespace EPiCode.SqlBlobProvider;
 
