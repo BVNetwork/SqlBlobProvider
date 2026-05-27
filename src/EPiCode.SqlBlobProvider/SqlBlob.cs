@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using EPiServer.Framework.Blobs;
+using Microsoft.Extensions.FileProviders;
+using System.Threading.Tasks;
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable ConvertToPrimaryConstructor
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
@@ -23,10 +25,40 @@ public class SqlBlob : Blob
     {
         if (!LoadFromDisk)
         {
-            return new NonSeekableMemoryStream(SqlBlobModelRepository.Get(ID).Blob);
+            var blobModel = SqlBlobModelRepository.Get(ID);
+            if (blobModel?.Blob == null)
+            {
+                throw new FileNotFoundException($"Blob not found for id '{ID}'.", ID.ToString());
+            }
+
+            return new NonSeekableMemoryStream(blobModel.Blob);
         }
 
         return FileHelper.GetOrCreateFileBlob(FilePath, ID);
+    }
+
+    public override Task<IFileInfo> AsFileInfoAsync(DateTimeOffset? lastModified = null)
+    {
+        var exists = false;
+        long length = -1;
+
+        if (LoadFromDisk && !string.IsNullOrWhiteSpace(FilePath) && File.Exists(FilePath))
+        {
+            var fileInfo = new FileInfo(FilePath);
+            exists = true;
+            length = fileInfo.Length;
+        }
+        else
+        {
+            var blobModel = SqlBlobModelRepository.Get(ID);
+            if (blobModel?.Blob != null)
+            {
+                exists = true;
+                length = blobModel.Blob.LongLength;
+            }
+        }
+
+        return Task.FromResult<IFileInfo>(new SqlBlobFileInfo(this, exists, length, lastModified));
     }
 
     public override Stream OpenWrite()
@@ -69,5 +101,36 @@ public class SqlBlob : Blob
         }
 
         SqlBlobModelRepository.Save(sqlBlobModel);
+    }
+
+    private sealed class SqlBlobFileInfo : IFileInfo
+    {
+        private readonly SqlBlob _blob;
+        private readonly DateTimeOffset? _lastModified;
+
+        public SqlBlobFileInfo(SqlBlob blob, bool exists, long length, DateTimeOffset? lastModified)
+        {
+            _blob = blob;
+            Exists = exists;
+            Length = length;
+            _lastModified = lastModified;
+        }
+
+        public bool Exists { get; }
+        public long Length { get; }
+        public string PhysicalPath => _blob.FilePath;
+        public string Name => Path.GetFileName(_blob.FilePath);
+        public DateTimeOffset LastModified => _lastModified ?? DateTimeOffset.UtcNow;
+        public bool IsDirectory => false;
+
+        public Stream CreateReadStream()
+        {
+            if (!Exists)
+            {
+                throw new FileNotFoundException($"Blob not found for id '{_blob.ID}'.", _blob.ID.ToString());
+            }
+
+            return _blob.OpenRead();
+        }
     }
 }

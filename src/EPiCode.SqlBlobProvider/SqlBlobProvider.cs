@@ -72,7 +72,7 @@ public class SqlBlobProvider : BlobProvider
 
     public override Blob GetBlob(Uri id)
     {
-        return new SqlBlob(id, System.IO.Path.Combine(Path, id.AbsolutePath[1..]), LoadFromDisk);
+         return new SqlBlob(id, System.IO.Path.Combine(Path, id.AbsolutePath[1..]), LoadFromDisk);
     }
 
     public override Blob CreateBlob(Uri id, string extension)
