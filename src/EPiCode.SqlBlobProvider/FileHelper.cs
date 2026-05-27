@@ -58,7 +58,13 @@ class FileHelper
             return new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
         }
 
-        var bytes = SqlBlobModelRepository.Get(id).Blob;
+        var blobModel = SqlBlobModelRepository.Get(id);
+        if (blobModel?.Blob == null)
+        {
+            throw new FileNotFoundException($"Blob not found for id '{id}'.", id.ToString());
+        }
+
+        var bytes = blobModel.Blob;
         var directoryInfo = new DirectoryInfo(Path.GetDirectoryName(filePath) ?? string.Empty);
         if (!directoryInfo.Exists)
         {
