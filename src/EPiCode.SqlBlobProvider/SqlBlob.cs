@@ -41,12 +41,14 @@ public class SqlBlob : Blob
     {
         var exists = false;
         long length = -1;
+        string physicalPath = null;
 
         if (LoadFromDisk && !string.IsNullOrWhiteSpace(FilePath) && File.Exists(FilePath))
         {
             var fileInfo = new FileInfo(FilePath);
             exists = true;
             length = fileInfo.Length;
+            physicalPath = fileInfo.FullName;
         }
         else
         {
@@ -58,7 +60,7 @@ public class SqlBlob : Blob
             }
         }
 
-        return Task.FromResult<IFileInfo>(new SqlBlobFileInfo(this, exists, length, lastModified));
+        return Task.FromResult<IFileInfo>(new SqlBlobFileInfo(this, exists, length, physicalPath, lastModified));
     }
 
     public override Stream OpenWrite()
@@ -107,18 +109,20 @@ public class SqlBlob : Blob
     {
         private readonly SqlBlob _blob;
         private readonly DateTimeOffset? _lastModified;
+        private readonly string _physicalPath;
 
-        public SqlBlobFileInfo(SqlBlob blob, bool exists, long length, DateTimeOffset? lastModified)
+        public SqlBlobFileInfo(SqlBlob blob, bool exists, long length, string physicalPath, DateTimeOffset? lastModified)
         {
             _blob = blob;
             Exists = exists;
             Length = length;
+            _physicalPath = physicalPath;
             _lastModified = lastModified;
         }
 
         public bool Exists { get; }
         public long Length { get; }
-        public string PhysicalPath => _blob.FilePath;
+        public string PhysicalPath => _physicalPath;
         public string Name => Path.GetFileName(_blob.FilePath);
         public DateTimeOffset LastModified => _lastModified ?? DateTimeOffset.UtcNow;
         public bool IsDirectory => false;
