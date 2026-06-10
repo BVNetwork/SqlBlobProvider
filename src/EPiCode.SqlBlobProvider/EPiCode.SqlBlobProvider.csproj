@@ -5,7 +5,7 @@
         <AssemblyTitle>EPiCode.SqlBlobProvider</AssemblyTitle>
         <Company>BV Network AS</Company>
         <Product>EPiCode.SqlBlobProvider</Product>
-        <Version>2.1.0</Version>
+        <Version>2.1.1</Version>
     </PropertyGroup>
     <PropertyGroup>
         <Title>EPiCode.SqlBlobProvider</Title>
@@ -13,7 +13,7 @@
         <PackageProjectUrl>https://github.com/BVNetwork/SqlBlobProvider</PackageProjectUrl>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <Description>A blob provider which stores all blobs in the SQL database (for the CMS) instead of disk, S3 or Azure blob storage</Description>
-        <PackageReleaseNotes>2.1.0 - Improved Optimizely Graph media extraction compatibility by adding proper blob existence checks, clearer missing-blob handling, and FileInfo support for SQL-backed blobs.</PackageReleaseNotes>
+        <PackageReleaseNotes>2.1.1 - Fix thumbnail not showing in UI. 2.1.0 - Improved Optimizely Graph media extraction compatibility by adding proper blob existence checks, clearer missing-blob handling, and FileInfo support for SQL-backed blobs.</PackageReleaseNotes>
         <PackageTags>EPiServer Blob</PackageTags>
     </PropertyGroup>
     <ItemGroup>
