@@ -7,7 +7,7 @@ Also works for Optimizely Commerce as the assets are stored as regular media.
 
 ## Requirements
 
-Optimizely CMS 12 is required. For CMS 11 support, use previous version of the library.
+Optimizely CMS 13 is required. If using CMS 12, use version 2. For CMS 11 support, use a previous version of the library.
 
 ## Installation
 

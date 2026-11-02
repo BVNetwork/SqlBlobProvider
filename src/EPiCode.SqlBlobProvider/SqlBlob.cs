@@ -2,6 +2,7 @@
 using System.IO;
 using EPiServer.Framework.Blobs;
 using Microsoft.Extensions.FileProviders;
+using System.Threading;
 using System.Threading.Tasks;
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable ConvertToPrimaryConstructor
@@ -37,11 +38,66 @@ public class SqlBlob : Blob
         return FileHelper.GetOrCreateFileBlob(FilePath, ID);
     }
 
-    public override Task<IFileInfo> AsFileInfoAsync(DateTimeOffset? lastModified = null)
+    public override Task<Stream> OpenReadAsync(CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+        return Task.FromResult(OpenRead());
+    }
+
+    public override Task<Stream> OpenWriteAsync(CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        return Task.FromResult(OpenWrite());
+    }
+
+    public override async Task WriteAsync(Stream stream, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        SqlBlobModel blobModel;
+        if ((blobModel = SqlBlobModelRepository.Get(ID)) == null)
+        {
+            blobModel = new()
+            {
+                BlobId = ID,
+            };
+        }
+
+        var sqlBlobModel = blobModel;
+        using (var memoryStream = new MemoryStream())
+        {
+            await stream.CopyToAsync(memoryStream, cancellationToken).ConfigureAwait(false);
+            sqlBlobModel.Blob = memoryStream.ToArray();
+        }
+
+        SqlBlobModelRepository.Save(sqlBlobModel);
+    }
+
+    public override bool Exists()
+    {
+        if (LoadFromDisk)
+        {
+            return !string.IsNullOrWhiteSpace(FilePath) && File.Exists(FilePath);
+        }
+
+        var blobModel = SqlBlobModelRepository.Get(ID);
+        return blobModel?.Blob != null;
+    }
+
+    public override Task<bool> ExistsAsync(CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        return Task.FromResult(Exists());
+    }
+
+    public override async Task<IFileInfo> AsFileInfoAsync(DateTimeOffset lastModified, bool openReadStream, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
         var exists = false;
         long length = -1;
         string physicalPath = null;
+        Stream readStream = null;
 
         if (LoadFromDisk && !string.IsNullOrWhiteSpace(FilePath) && File.Exists(FilePath))
         {
@@ -60,7 +116,12 @@ public class SqlBlob : Blob
             }
         }
 
-        return Task.FromResult<IFileInfo>(new SqlBlobFileInfo(this, exists, length, physicalPath, lastModified));
+        if (openReadStream && exists)
+        {
+            readStream = await OpenReadAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        return new SqlBlobFileInfo(this, exists, length, physicalPath, lastModified, readStream);
     }
 
     public override Stream OpenWrite()
@@ -108,23 +169,25 @@ public class SqlBlob : Blob
     private sealed class SqlBlobFileInfo : IFileInfo
     {
         private readonly SqlBlob _blob;
-        private readonly DateTimeOffset? _lastModified;
+        private readonly DateTimeOffset _lastModified;
         private readonly string _physicalPath;
+        private Stream _readStream;
 
-        public SqlBlobFileInfo(SqlBlob blob, bool exists, long length, string physicalPath, DateTimeOffset? lastModified)
+        public SqlBlobFileInfo(SqlBlob blob, bool exists, long length, string physicalPath, DateTimeOffset lastModified, Stream readStream)
         {
             _blob = blob;
             Exists = exists;
             Length = length;
             _physicalPath = physicalPath;
             _lastModified = lastModified;
+            _readStream = readStream;
         }
 
         public bool Exists { get; }
         public long Length { get; }
         public string PhysicalPath => _physicalPath;
         public string Name => Path.GetFileName(_blob.FilePath);
-        public DateTimeOffset LastModified => _lastModified ?? DateTimeOffset.UtcNow;
+        public DateTimeOffset LastModified => _lastModified;
         public bool IsDirectory => false;
 
         public Stream CreateReadStream()
@@ -134,7 +197,8 @@ public class SqlBlob : Blob
                 throw new FileNotFoundException($"Blob not found for id '{_blob.ID}'.", _blob.ID.ToString());
             }
 
-            return _blob.OpenRead();
+            var readStream = Interlocked.Exchange(ref _readStream, null);
+            return readStream ?? _blob.OpenRead();
         }
     }
 }

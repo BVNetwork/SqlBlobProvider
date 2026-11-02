@@ -1,16 +1,15 @@
-﻿using System.IO;
+using System.IO;
 using EPiServer.Framework.Blobs;
-using EPiServer.PlugIn;
 using EPiServer.Scheduler;
 using EPiServer.ServiceLocation;
 // ReSharper disable UnusedType.Global
 
 namespace EPiCode.SqlBlobProvider;
 
-[ScheduledPlugIn(
+[ScheduledJobAttribute(
     DisplayName = "Export SQL Blobs",
-    Description = "Exports all SQL Blobs to disk",
-    SortIndex = 10001)]
+    Description = "Exports all SQL Blobs to disk"
+    )]
 public class ExportSqlBlobsJob : ScheduledJobBase
 {
     private bool _stopSignaled;
