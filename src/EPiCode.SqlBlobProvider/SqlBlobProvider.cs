@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using EPiServer;
@@ -19,7 +19,7 @@ public class SqlBlobProvider : BlobProvider
     public bool LoadFromDisk { get; internal set; }
     private const string PathKey = "Episerver:CMS:SqlBlobProvider:Path";
     private const string LoadFromDiskKey = "Episerver:CMS:SqlBlobProvider:LoadFromDisk";
-    protected const string StandardFilePath = "[appDataPath]\\sqlProviderBlobs";
+    protected static string StandardFilePath => Path.Combine((AppDomain.CurrentDomain.GetData("DataDirectory") as string) ?? Path.Combine(AppContext.BaseDirectory, "AppData"), "sqlProviderBlobs");
 
     public SqlBlobProvider() : this(StandardFilePath, false)
     {
