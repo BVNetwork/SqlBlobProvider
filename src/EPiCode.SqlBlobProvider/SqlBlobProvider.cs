@@ -28,7 +28,7 @@ public class SqlBlobProvider : BlobProvider
     public SqlBlobProvider(string path, bool loadFromDisk)
     {
         LoadFromDisk = loadFromDisk;
-        Path = VirtualPathUtilityEx.RebasePhysicalPath(path);
+        Path = path;
     }
 
     public override Task InitializeAsync()
@@ -39,10 +39,13 @@ public class SqlBlobProvider : BlobProvider
 
         if (!string.IsNullOrWhiteSpace(path))
         {
-            Path = VirtualPathUtilityEx.RebasePhysicalPath(path);
+            Path = path;
         }
 
-        Validator.ThrowIfNullOrEmpty(PathKey, Path);
+        if (string.IsNullOrWhiteSpace(Path))
+        {
+            throw new InvalidOperationException($"SqlBlobProvider path configuration is required. Set '{PathKey}' in configuration.");
+        }
 
         var events = ServiceLocator.Current.GetInstance<IContentEvents>();
         if (LoadFromDisk)
@@ -50,7 +53,7 @@ public class SqlBlobProvider : BlobProvider
             events.DeletingContent += DeleteSqlBlobProviderFiles;
         }
 
-        return Task.FromResult((object)null);
+        return Task.CompletedTask;
     }
 
     private void DeleteSqlBlobProviderFiles(object sender, DeleteContentEventArgs e)
