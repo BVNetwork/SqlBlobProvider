@@ -1,19 +1,20 @@
-﻿using System;
-using System.IO;
-using System.Text;
+﻿using EPiServer.Framework;
 using EPiServer.Framework.Blobs;
-using EPiServer.PlugIn;
 using EPiServer.Scheduler;
 using EPiServer.ServiceLocation;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using System;
+using System.IO;
+using System.Text;
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable UnusedType.Global
 
 namespace EPiCode.BlobConverter;
 
-[ScheduledPlugIn(
+[ScheduledJob(
     DisplayName = "Convert File Blobs",
-    Description = "Converts all file blobs into the currently configured blob type",
-    SortIndex = 10000)]
+    Description = "Converts all file blobs into the currently configured blob type")]
 public class BlobJob : ScheduledJobBase
 {
     protected Injected<IBlobProviderRegistry> BlobProviderRegistry { get; set; }
@@ -29,8 +30,8 @@ public class BlobJob : ScheduledJobBase
     public override string Execute()
     {
         OnStatusChanged($"Starting execution of {GetType()}");
-        ProcessDirectory(new FileBlobProvider().Path);
-        var status = $"Converted {_count} blobs <br\\>";
+        ProcessDirectory(new FileBlobProvider(ServiceLocator.Current.GetRequiredService<EnvironmentOptions>(), ServiceLocator.Current.GetRequiredService<IHostEnvironment>(), null).Path);
+        var status = $"Converted {_count} blobs <br>";
         if (_failCount > 0)
         {
             status = $"Converting errors:{_failCount}. Details:{_errorText}";
@@ -47,7 +48,10 @@ public class BlobJob : ScheduledJobBase
             directory = Path.GetFileName(directory);
             var id =
                 new Uri($"{Blob.BlobUriScheme}://{Blob.DefaultProvider}/{directory}/{path}");
-            var blob = new FileBlobProvider().GetBlob(id);
+            var blob = new FileBlobProvider(ServiceLocator.Current.GetRequiredService<EnvironmentOptions>(), ServiceLocator.Current.GetRequiredService<IHostEnvironment>(), new FileBlobProviderOptions
+            {
+                Path = path
+            }).GetBlob(id);
 
             var blobProvider = BlobProviderRegistry.Service.GetProvider(id);
             blobProvider.GetBlob(id).Write(blob.OpenRead());
